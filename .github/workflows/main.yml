@@ -5,19 +5,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Unzip
         run: unzip -o newBilal.zip
+
       - name: JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build Debug APK Only
+
+      - name: Create Missing Debug Keystore
+        run: |
+          echo "Creating debug.keystore..."
+          keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          cp debug.keystore app/debug.keystore || true
+          ls -la *.keystore
+          ls -la app/*.keystore || true
+
+      - name: Build Debug APK
         run: |
           gradle wrapper --gradle-version 9.3.1
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
-      - name: Upload
+
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Bilal-APK-6194905
