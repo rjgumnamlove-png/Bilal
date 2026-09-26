@@ -8,7 +8,6 @@ jobs:
 
       - name: Unzip Project
         run: |
-          rm -rf app gradle build.gradle.kts settings.gradle.kts
           unzip -o newBilal.zip
           ls -la
 
@@ -17,9 +16,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
 
       - name: Setup Gradle 9.3.1
         run: |
